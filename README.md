@@ -34,19 +34,19 @@ Currently running locally at: `http://localhost:8000`
 ## 📸 Screenshots
 
 ### Login Page
-![Login Page](screenshots/login.png)
+![Login Page](screenshots/login.html)
 
 ### Donor Dashboard
-![Donor Dashboard](screenshots/donor_dashboard.png)
+![Donor Dashboard](screenshots/donor_dashboard.html)
 
 ### Blood Bank Management
-![Blood Bank Dashboard](screenshots/bloodbank_dashboard.png)
+![Blood Bank Dashboard](screenshots/bloodbank_dashboard.html)
 
 ### Hospital Requests
-![Hospital Dashboard](screenshots/hospital_dashboard.png)
+![Hospital Dashboard](screenshots/hospital_dashboard.html)
 
 ### Blood Inventory
-![Blood Inventory](screenshots/inventory.png)
+![Blood Inventory](screenshots/inventory.html)
 
 ## 🛠️ Technology Stack
 
@@ -226,10 +226,6 @@ For support and inquiries:
 - 📧 Email: support@bdms.com
 - 🐛 Issues: [GitHub Issues](https://github.com/Swethasri08/LifeLink-AI-Smart-Emergency-Blood-Response-System/issues)
 - 📖 Documentation: [Wiki](https://github.com/Swethasri08/LifeLink-AI-Smart-Emergency-Blood-Response-System/wiki)
-
-## 🌟 Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Swethasri08/LifeLink-AI-Smart-Emergency-Blood-Response-System&type=Date)](https://star-history.com/#Swethasri08/LifeLink-AI-Smart-Emergency-Blood-Response-System&Date)
 
 ---
 
