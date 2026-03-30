@@ -34,19 +34,19 @@ Currently running locally at: `http://localhost:8000`
 ## 📸 Screenshots
 
 ### Login Page
-![Login Page](screenshots/login.html)
+![Login Page](screenshots/login.png)
 
 ### Donor Dashboard
-![Donor Dashboard](screenshots/donor_dashboard.html)
+![Donor Dashboard](screenshots/donor_dashboard.png)
 
 ### Blood Bank Management
-![Blood Bank Dashboard](screenshots/bloodbank_dashboard.html)
+![Blood Bank Dashboard](screenshots/bloodbank_dashboard_actual.png)
 
 ### Hospital Requests
-![Hospital Dashboard](screenshots/hospital_dashboard.html)
+![Hospital Dashboard](screenshots/hospital_dashboard.png)
 
 ### Blood Inventory
-![Blood Inventory](screenshots/inventory.html)
+![Blood Inventory](screenshots/inventory.png)
 
 ## 🛠️ Technology Stack
 
