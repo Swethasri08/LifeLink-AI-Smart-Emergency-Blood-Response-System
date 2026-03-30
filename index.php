@@ -1,6 +1,58 @@
 <?php
-session_start();
-// Removed auto-redirect to dashboard. Login form will always show.
+// Blood Donation Management System - Vercel Compatible Entry Point
+
+// Get the requested path
+$requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+$requestPath = parse_url($requestUri, PHP_URL_PATH);
+
+// Route the request
+if ($requestPath === '/' || $requestPath === '') {
+    // Main application
+    require_once 'login.php';
+} elseif (strpos($requestPath, '/login') !== false) {
+    // Login page
+    require_once 'login.php';
+} elseif (strpos($requestPath, '/register') !== false) {
+    // Registration page
+    require_once 'register.php';
+} elseif (strpos($requestPath, '/dashboard') !== false) {
+    // Dashboard - check user role and redirect appropriately
+    session_start();
+    if (isset($_SESSION['user_role'])) {
+        switch ($_SESSION['user_role']) {
+            case 'donor':
+                require_once 'donor_dashboard.php';
+                break;
+            case 'bloodbank':
+                require_once 'bloodbank_dashboard.php';
+                break;
+            case 'hospital':
+                require_once 'hospital_dashboard.php';
+                break;
+            case 'admin':
+                // Admin dashboard (if exists)
+                require_once 'index.php'; // Fallback to main
+                break;
+            default:
+                require_once 'login.php';
+                break;
+        }
+    } else {
+        require_once 'login.php';
+    }
+} elseif (strpos($requestPath, '/donor') !== false) {
+    // Donor dashboard
+    require_once 'donor_dashboard.php';
+} elseif (strpos($requestPath, '/bloodbank') !== false) {
+    // Blood bank dashboard
+    require_once 'bloodbank_dashboard.php';
+} elseif (strpos($requestPath, '/hospital') !== false) {
+    // Hospital dashboard
+    require_once 'hospital_dashboard.php';
+} else {
+    // Default to login for any other path
+    require_once 'login.php';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,4 +113,4 @@ session_start();
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>
