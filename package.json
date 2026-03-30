@@ -1,0 +1,32 @@
+{
+  "name": "blood-donation-management-system",
+  "version": "1.0.0",
+  "description": "A comprehensive Blood Donation Management System for managing donors, blood banks, and hospitals",
+  "main": "index.php",
+  "scripts": {
+    "start": "php -S localhost:8000",
+    "dev": "php -S localhost:8000",
+    "build": "echo 'Build complete'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "blood donation",
+    "healthcare",
+    "php",
+    "mysql",
+    "blood bank",
+    "hospital management"
+  ],
+  "author": "Swethasri08",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Swethasri08/LifeLink-AI-Smart-Emergency-Blood-Response-System"
+  },
+  "engines": {
+    "php": ">=8.1"
+  },
+  "dependencies": {
+    "php": "^8.1"
+  }
+}
