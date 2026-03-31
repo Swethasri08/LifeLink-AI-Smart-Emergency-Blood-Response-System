@@ -15,10 +15,5 @@
   ],
   "env": {
     "APP_ENV": "production"
-  },
-  "functions": {
-    "api/*.php": {
-      "runtime": "php8.1"
-    }
   }
 }
