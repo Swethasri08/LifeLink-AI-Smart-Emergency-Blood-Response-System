@@ -22,7 +22,7 @@
   "license": "MIT",
   "dependencies": {},
   "engines": {
-    "node": ">=18.0.0"
+    "node": "18.x"
   },
   "homepage": "https://github.com/Swethasri08/LifeLink-AI-Smart-Emergency-Blood-Response-System"
 }

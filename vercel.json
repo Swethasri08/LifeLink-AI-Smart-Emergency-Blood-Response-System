@@ -1,15 +1,8 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/index.php",
-      "use": "@vercel/php"
-    },
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    }
-  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": ".",
+  "installCommand": "npm install",
   "routes": [
     {
       "src": "/api/(.*)",
@@ -20,16 +13,13 @@
       "dest": "/index.html"
     }
   ],
-  "env": {
-    "APP_ENV": "production",
-    "DB_HOST": "localhost",
-    "DB_USERNAME": "root",
-    "DB_PASSWORD": "",
-    "DB_NAME": "bdms"
-  },
   "functions": {
     "api/index.php": {
+      "runtime": "php",
       "maxDuration": 10
     }
+  },
+  "env": {
+    "APP_ENV": "production"
   }
 }
