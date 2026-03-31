@@ -1,5 +1,5 @@
 services:
-  # PHP Web Service
+  # PHP Web Service - Your Actual BDMS Application
   - type: web
     name: blood-donation-management-system
     runtime: php
