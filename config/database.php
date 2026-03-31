@@ -2,37 +2,36 @@
 // Database configuration for Blood Donation Management System
 
 // Development environment (local)
-if (getenv('APP_ENV') === 'development' || !getenv('DATABASE_URL')) {
+if (getenv('APP_ENV') === 'development' || !getenv('DB_HOST')) {
     $host = "localhost";
     $username = "root";
     $password = "";
     $database = "bdms";
 } 
-// Production environment (Vercel)
+// Production environment (Docker/Render/Vercel)
 else {
-    // Parse Vercel database URL
-    $dbUrl = getenv('DATABASE_URL');
+    // Check for Docker environment variables first
+    $host = getenv('DB_HOST') ?? 'localhost';
+    $username = getenv('DB_USERNAME') ?? 'root';
+    $password = getenv('DB_PASSWORD') ?? '';
+    $database = getenv('DB_NAME') ?? 'bdms';
     
+    // Parse DATABASE_URL if available (for Vercel)
+    $dbUrl = getenv('DATABASE_URL');
     if ($dbUrl) {
         // Parse DATABASE_URL: mysql://username:password@host:port/database
         $parsedUrl = parse_url($dbUrl);
         
-        $host = $parsedUrl['host'] ?? 'localhost';
-        $username = $parsedUrl['user'] ?? '';
-        $password = $parsedUrl['pass'] ?? '';
-        $database = ltrim($parsedUrl['path'], '/') ?? 'bdms';
+        $host = $parsedUrl['host'] ?? $host;
+        $username = $parsedUrl['user'] ?? $username;
+        $password = $parsedUrl['pass'] ?? $password;
+        $database = ltrim($parsedUrl['path'], '/') ?? $database;
         $port = $parsedUrl['port'] ?? '3306';
         
         // Add port to host if specified
         if ($port && $port !== '3306') {
             $host .= ':' . $port;
         }
-    } else {
-        // Fallback for Vercel
-        $host = getenv('DB_HOST') ?? 'localhost';
-        $username = getenv('DB_USERNAME') ?? 'root';
-        $password = getenv('DB_PASSWORD') ?? '';
-        $database = getenv('DB_NAME') ?? 'bdms';
     }
 }
 

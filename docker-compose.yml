@@ -16,6 +16,8 @@ services:
       - DB_NAME=bdms
     volumes:
       - .:/var/www/html
+    networks:
+      - app-network
 
   # MySQL Database
   db:
@@ -30,6 +32,13 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./database_complete.sql:/docker-entrypoint-initdb.d/database_complete.sql
+    networks:
+      - app-network
+    command: --default-authentication-plugin=mysql_native_password
 
 volumes:
   db_data:
+
+networks:
+  app-network:
+    driver: bridge
