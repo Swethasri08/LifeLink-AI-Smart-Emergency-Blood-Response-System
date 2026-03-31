@@ -2,18 +2,34 @@
   "version": 2,
   "builds": [
     {
-      "src": "server.js",
-      "use": "@vercel/node"
+      "src": "api/index.php",
+      "use": "@vercel/php"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api/index.php"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/server.js"
+      "dest": "/index.html"
     }
   ],
   "env": {
     "APP_ENV": "production",
-    "NODE_ENV": "production"
+    "DB_HOST": "localhost",
+    "DB_USERNAME": "root",
+    "DB_PASSWORD": "",
+    "DB_NAME": "bdms"
+  },
+  "functions": {
+    "api/index.php": {
+      "maxDuration": 10
+    }
   }
 }
