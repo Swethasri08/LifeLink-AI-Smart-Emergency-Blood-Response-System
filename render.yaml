@@ -1,0 +1,35 @@
+services:
+  # PHP Web Service
+  - type: web
+    name: blood-donation-management-system
+    runtime: php
+    plan: free
+    buildCommand: "echo 'Build complete'"
+    startCommand: "php -S 0.0.0.0:10000"
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DB_HOST
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false
+    healthCheckPath: /
+    
+  # MySQL Database Service
+  - type: pserv
+    name: mysql-db
+    runtime: mysql
+    plan: free
+    envVars:
+      - key: MYSQL_DATABASE
+        value: bdms
+      - key: MYSQL_USER
+        value: bdms_user
+      - generateValue: password
+        key: MYSQL_PASSWORD
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: password

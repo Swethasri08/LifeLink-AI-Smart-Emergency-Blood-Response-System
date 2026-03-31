@@ -1,0 +1,30 @@
+{
+  "name": "blood-donation-management-system",
+  "version": "1.0.0",
+  "description": "Blood Donation Management System - PHP Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "echo 'Build complete'"
+  },
+  "keywords": [
+    "blood donation",
+    "healthcare",
+    "php",
+    "mysql",
+    "blood bank",
+    "hospital management"
+  ],
+  "author": "Swethasri08",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "php-execute": "^0.2.1",
+    "mysql2": "^3.6.0",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
