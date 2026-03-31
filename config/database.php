@@ -5,40 +5,96 @@
 $databaseUrl = getenv('DATABASE_URL');
 
 if ($databaseUrl) {
-    // Parse DATABASE_URL: mysql://username:password@host:port/database
+    // Parse DATABASE_URL: postgres://username:password@host:port/database
     $parsedUrl = parse_url($databaseUrl);
     
-    if ($parsedUrl && isset($parsedUrl['scheme']) && $parsedUrl['scheme'] === 'mysql') {
+    if ($parsedUrl && isset($parsedUrl['scheme'])) {
+        $scheme = $parsedUrl['scheme'];
         $host = $parsedUrl['host'] ?? 'localhost';
-        $username = $parsedUrl['user'] ?? 'root';
+        $username = $parsedUrl['user'] ?? 'postgres';
         $password = $parsedUrl['pass'] ?? '';
         $database = ltrim($parsedUrl['path'], '/') ?? 'bdms';
         
         // Add port if specified
-        if (isset($parsedUrl['port']) && $parsedUrl['port'] != '3306') {
+        if (isset($parsedUrl['port']) && $parsedUrl['port'] != '5432') {
             $host .= ':' . $parsedUrl['port'];
+        }
+        
+        // Use PostgreSQL connection
+        if ($scheme === 'postgres' || $scheme === 'postgresql') {
+            try {
+                $conn = pg_connect("host=$host dbname=$database user=$username password=$password");
+                if (!$conn) {
+                    throw new Exception("PostgreSQL connection failed");
+                }
+            } catch (Exception $e) {
+                // Fallback to MySQL if PostgreSQL fails
+                $conn = mysqli_connect($host, $username, $password, $database);
+            }
+        } else {
+            // Fallback for MySQL
+            $conn = mysqli_connect($host, $username, $password, $database);
         }
     } else {
         // Fallback if DATABASE_URL is malformed
         $host = getenv('DB_HOST') ?: 'localhost';
-        $username = getenv('DB_USERNAME') ?: 'root';
+        $username = getenv('DB_USERNAME') ?: 'postgres';
         $password = getenv('DB_PASSWORD') ?: '';
         $database = getenv('DB_NAME') ?: 'bdms';
+        
+        // Try PostgreSQL first, then MySQL
+        try {
+            $conn = pg_connect("host=$host dbname=$database user=$username password=$password");
+            if (!$conn) {
+                throw new Exception("PostgreSQL connection failed");
+            }
+        } catch (Exception $e) {
+            $conn = mysqli_connect($host, $username, $password, $database);
+        }
     }
 } else {
     // No DATABASE_URL - use individual environment variables
     $host = getenv('DB_HOST') ?: 'localhost';
-    $username = getenv('DB_USERNAME') ?: 'root';
+    $username = getenv('DB_USERNAME') ?: 'postgres';
     $password = getenv('DB_PASSWORD') ?: '';
     $database = getenv('DB_NAME') ?: 'bdms';
+    
+    // Try PostgreSQL first, then MySQL
+    try {
+        $conn = pg_connect("host=$host dbname=$database user=$username password=$password");
+        if (!$conn) {
+            throw new Exception("PostgreSQL connection failed");
+        }
+    } catch (Exception $e) {
+        $conn = mysqli_connect($host, $username, $password, $database);
+    }
 }
 
-// Create database connection
-$conn = mysqli_connect($host, $username, $password, $database);
+// Check if tables exist - if not, redirect to installation
+if ($conn) {
+    $is_postgresql = is_resource($conn) && get_resource_type($conn) === 'pgsql link';
+    
+    if ($is_postgresql) {
+        // Check if admins table exists in PostgreSQL
+        $result = pg_query($conn, "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'admins')");
+        $row = pg_fetch_row($result);
+        $tables_exist = $row[0] == 't';
+    } else {
+        // Check if admins table exists in MySQL
+        $result = mysqli_query($conn, "SHOW TABLES LIKE 'admins'");
+        $tables_exist = mysqli_num_rows($result) > 0;
+    }
+    
+    // If tables don't exist, redirect to installation
+    if (!$tables_exist) {
+        header('Location: install_database.php');
+        exit;
+    }
+}
 
 // Check connection
 if (!$conn) {
-    $error = mysqli_connect_error();
+    $error = pg_last_error() ?: mysqli_connect_error();
     
     // Show user-friendly error page
     ?>
@@ -74,20 +130,20 @@ if (!$conn) {
                                 <li><strong>DATABASE_URL:</strong> <?php echo $databaseUrl ? 'Set' : 'Not set'; ?></li>
                             </ul>
                             
-                            <h6><i class="fas fa-tools me-2"></i>To Fix This:</h6>
+                            <h6><i class="fas fa-tools me-2"></i>Quick Setup with Render PostgreSQL:</h6>
                             <ol>
-                                <li>Create a MySQL database on Render</li>
-                                <li>Connect it to your web service</li>
-                                <li>Import the database schema</li>
+                                <li>Create the PostgreSQL database on Render (Free plan)</li>
+                                <li>Wait for database to be ready (2-3 minutes)</li>
+                                <li>Visit install_database.php to auto-install schema</li>
                                 <li>Restart your web service</li>
                             </ol>
                             
                             <div class="text-center mt-4">
-                                <a href="https://render.com/docs/databases" target="_blank" class="btn btn-primary me-2">
-                                    <i class="fas fa-external-link-alt me-2"></i>Render Database Docs
+                                <a href="install_database.php" class="btn btn-primary me-2">
+                                    <i class="fas fa-database me-2"></i>Install Database
                                 </a>
-                                <a href="https://github.com/Swethasri08/LifeLink-AI-Smart-Emergency-Blood-Response-System" target="_blank" class="btn btn-outline-secondary">
-                                    <i class="fab fa-github me-2"></i>View on GitHub
+                                <a href="https://render.com/docs/databases" target="_blank" class="btn btn-outline-secondary">
+                                    <i class="fas fa-external-link-alt me-2"></i>Render Database Docs
                                 </a>
                             </div>
                         </div>
@@ -105,6 +161,12 @@ if (!$conn) {
 }
 
 // Set character set for proper encoding
-mysqli_set_charset($conn, "utf8mb4");
+if (is_resource($conn) && get_resource_type($conn) === 'pgsql link') {
+    // PostgreSQL connection
+    pg_query($conn, "SET NAMES 'utf8mb4'");
+} else {
+    // MySQL connection
+    mysqli_set_charset($conn, "utf8mb4");
+}
 
 ?>
